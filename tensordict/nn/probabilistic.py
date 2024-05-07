@@ -401,6 +401,7 @@ class ProbabilisticTensorDictModule(TensorDictModuleBase):
                 if self.return_log_prob:
                     log_prob = dist.log_prob(*out_tensors)
                     tensordict_out.set(self.log_prob_key, log_prob)
+
         elif self.return_log_prob:
             out_tensors = [
                 tensordict.get(key) for key in self.out_keys if key != self.log_prob_key
@@ -571,5 +572,9 @@ class ProbabilisticTensorDictSequential(TensorDictSequential):
         tensordict_out: TensorDictBase | None = None,
         **kwargs,
     ) -> TensorDictBase:
+        # print("tensordict: ", tensordict)
+        # print("tensordict out: ", tensordict_out)
         tensordict_out = self.get_dist_params(tensordict, tensordict_out, **kwargs)
+        # print("tensordict out after: ", tensordict_out)
+        # print("action normalized here: ", tensordict_out["agents", "action_normalized"])
         return self.module[-1](tensordict_out, _requires_sample=self._requires_sample)
